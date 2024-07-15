@@ -23,7 +23,7 @@ def main():
     #
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True) 
     server_socket.listen() 
-    conn = server_socket.accept()
+    conn , address= server_socket.accept()
     data = conn.recv(1024)
     method , path = handleReq(data.decode('ascii'))
     resp = ""
@@ -43,5 +43,5 @@ if __name__ == "__main__":
 
 
 # git add .
-# git commit -m "pass the 2nd stage" # any msg
+# git commit -m "pass the 3rd stage" # any msg
 # git push origin master
