@@ -27,10 +27,10 @@ def main():
     data = conn.recv(1024)
     method , path = handleReq(data.decode('ascii'))
     resp = ""
-    if path == "/index.html" :
-        resp = "HTTP/1.1 404 Not Found\r\n\r\n"
+    if path == "" :
+        resp ="HTTP/1.1 200 OK\r\n\r\n"
     else:
-        resp = "HTTP/1.1 200 OK\r\n\r\n"
+        resp = "HTTP/1.1 404 Not Found\r\n\r\n"
     conn.sendall(resp.encode())
 
 
