@@ -12,9 +12,14 @@ def main():
         conn , adress = server_socket.accept()
         with conn:
             data = conn.recv(1024)
-            conn.sendall("HTTP/1.1 200 OK\r\n\r\n")
+            conn.sendall(b'HTTP/1.1 200 OK\r\n\r\n')
 
 
 
 if __name__ == "__main__":
     main()
+
+
+# git add .
+# git commit -m "pass the 2nd stage" # any msg
+# git push origin master
