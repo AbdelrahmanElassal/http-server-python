@@ -7,8 +7,13 @@ def main():
 
     # Uncomment this to pass the first stage
     #
-    server_socket = socket.create_server(("localhost", 4221), reuse_port=True)
-    server_socket.accept() # wait for client
+    with socket.create_server(("localhost", 4221), reuse_port=True) as server_socket:
+        server_socket.listen() 
+        conn , adress = server_socket.accept()
+        with conn:
+            data = conn.recv(1024)
+            conn.sendall("HTTP/1.1 200 OK\r\n\r\n")
+
 
 
 if __name__ == "__main__":
