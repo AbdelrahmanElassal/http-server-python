@@ -22,7 +22,7 @@ def main():
     data = conn.recv(1024)
     path = handleReq(data.decode('ascii'))
     resp = ""
-    if path == "" :
+    if path == "/" :
         resp ="HTTP/1.1 200 OK\r\n\r\n"
     else:
         resp = "HTTP/1.1 404 Not Found\r\n\r\n"
