@@ -35,8 +35,8 @@ def main():
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True) 
     with server_socket:
         server_socket.listen() 
-        conn , address= server_socket.accept()
         while True:
+            conn , address= server_socket.accept()
             req = threading.Thread(target = handleReq , args=(conn,address))
             req.start()
     
