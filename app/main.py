@@ -22,11 +22,11 @@ def main():
     data = conn.recv(1024)
     path = handleReq(data.decode('ascii'))
     resp = ""
-    if path.startswith("/") :
-        resp ="HTTP/1.1 200 OK\r\n\r\n"
-    elif path.startswith("/echo"):
+    if path.startswith("/echo"):
         [f,r,data] = path.split('/')
         resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + str(len(data)) + "\r\n\r\n" + data 
+    elif path == '/':
+        resp ="HTTP/1.1 200 OK\r\n\r\n"
     else:
         resp = "HTTP/1.1 404 Not Found\r\n\r\n"
     conn.sendall(resp.encode())
@@ -39,5 +39,5 @@ if __name__ == "__main__":
 
 
 # git add .
-# git commit -m "pass the 3rd stage" # any msg
+# git commit -m "pass the 4th stage" # any msg
 # git push origin master
