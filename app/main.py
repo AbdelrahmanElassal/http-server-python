@@ -8,8 +8,7 @@ def parseReq(reqmess): #req -> "GET /index.html HTTP/1.1\r\nHost: localhost:4221
     return [path , Headers]
     
     
-def handleReq(server_socket):
-    conn , address= server_socket.accept()
+def handleReq(conn , address):
     with conn:
         data = conn.recv(1024)
         [path , headers] = parseReq(data.decode('ascii'))
@@ -36,8 +35,9 @@ def main():
     server_socket = socket.create_server(("localhost", 4221), reuse_port=True) 
     with server_socket:
         server_socket.listen() 
+        conn , address= server_socket.accept()
         while True:
-            req = threading.Thread(target = handleReq , args=(server_socket,))
+            req = threading.Thread(target = handleReq , args=(conn,address))
             req.start()
     
 
