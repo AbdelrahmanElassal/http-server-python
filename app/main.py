@@ -27,26 +27,40 @@ def parseReq(reqmess): #req -> "GET /index.html HTTP/1.1\r\nHost: localhost:4221
     [method , path , ex] = rq_line.split(" ")
     [header , body] = Rest.split("\r\n\r\n")
     Headers = header.split("\r\n")
-    return [path , Headers]
+    return {
+        "req_line" : {
+            "method":method,
+            "path"  :path,
+            "ex"    :ex
+        },
+        "headers"   :Headers,
+        "body"     :body
+    }
     
     
 def handleReq(conn , address):
     with conn:
         data = conn.recv(1024)
-        [path , headers] = parseReq(data.decode('ascii'))
-        resp = ""
-        if path.startswith("/echo"):
-            resp = echoHandler(path)
-        elif path.startswith("/files"):
-            resp = fileHandler(path)
-        elif path.startswith("/user-agent"):
-            resp = yagentHandler(headers)
-        elif path == '/':
-            resp ="HTTP/1.1 200 OK\r\n\r\n"
-        else:
-            resp = "HTTP/1.1 404 Not Found\r\n\r\n"
+        req = parseReq(data.decode('ascii'))
+        path = req["req_line"]["path"]
+        headers = req["headers"]
+        resp = getPaths(path , headers)
         conn.sendall(resp.encode())
 
+def getPaths(path , headers):
+    resp = ""
+    if path.startswith("/echo"):
+        resp = echoHandler(path)
+    elif path.startswith("/files"):
+        resp = fileHandler(path)
+    elif path.startswith("/user-agent"):
+        resp = yagentHandler(headers)
+    elif path == '/':
+        resp ="HTTP/1.1 200 OK\r\n\r\n"
+    else:
+        resp = "HTTP/1.1 404 Not Found\r\n\r\n"
+    return resp
+#def postPaths():
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
