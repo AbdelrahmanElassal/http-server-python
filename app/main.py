@@ -38,6 +38,7 @@ def main():
         server_socket.listen() 
         while True:
             req = threading.Thread(target = handleReq , args=(server_socket,))
+            req.start()
     
 
 
@@ -45,7 +46,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-
-# git add .
-# git commit -m "pass the 5th stage" # any msg
-# git push origin master
