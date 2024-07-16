@@ -9,7 +9,7 @@ def fileHandler(path):
     try:
         with open(directory+filename , "r") as f:
             filecontent = f.read()
-            return "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + str(len(filecontent)) + "\r\n\r\n" + filecontent
+            return "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + str(len(filecontent)) + "\r\n\r\n" + filecontent
     except FileNotFoundError:
         return "HTTP/1.1 404 Not Found\r\n\r\n"
 def echoHandler(path):
