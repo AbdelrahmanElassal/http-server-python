@@ -4,8 +4,8 @@ def handleReq(reqmess): #req -> "GET /index.html HTTP/1.1\r\nHost: localhost:422
     [rq_line , Rest] = reqmess.split("\r\n" , 1)
     [method , path , ex] = rq_line.split(" ")
     [header , body] = Rest.split("\r\n\r\n")
-
-    return path
+    Headers = header.split("\r\n")
+    return [path , Headers]
     
     
 
@@ -20,11 +20,14 @@ def main():
     server_socket.listen() 
     conn , address= server_socket.accept()
     data = conn.recv(1024)
-    path = handleReq(data.decode('ascii'))
+    [path , headers] = handleReq(data.decode('ascii'))
     resp = ""
     if path.startswith("/echo"):
         [f,r,data] = path.split('/')
         resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + str(len(data)) + "\r\n\r\n" + data 
+    elif path.startswith("/user-agent"):
+        [q , bod] = headers[1].split(": ")
+        resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + str(len(bod)) + "\r\n\r\n" + bod 
     elif path == '/':
         resp ="HTTP/1.1 200 OK\r\n\r\n"
     else:
