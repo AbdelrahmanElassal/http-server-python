@@ -1,18 +1,13 @@
 import socket
 
-def handleReq(reqmess):
-    
-    Req_line , Rest = reqmess.split("/r/n" , 1)
-    Headers , Body = Rest.split("/r/n/r/n" , 1)
-    method , path , version = Req_line.split()
+def handleReq(reqmess): #req -> "GET /index.html HTTP/1.1\r\nHost: localhost:4221\r\nUser-Agent: curl/7.64.1\r\nAccept: */*\r\n\r\n"
+    [rq_line , Rest] = reqmess.split("\r\n" , 1)
+    [method , path , ex] = rq_line.split(" ")
+    [header , body] = Rest.split("\r\n\r\n")
 
-    headersdic = []
-    for el in Headers.split("/r/n"):
-        if el:
-            key, value = el.split(': ', 1)
-            headersdic[key] = value
+    return path
     
-    return (method , path)
+    
 
 
 def main():
@@ -25,15 +20,13 @@ def main():
     server_socket.listen() 
     conn , address= server_socket.accept()
     data = conn.recv(1024)
-    method , path = handleReq(data.decode('ascii'))
+    path = handleReq(data.decode('ascii'))
     resp = ""
     if path == "" :
         resp ="HTTP/1.1 200 OK\r\n\r\n"
     else:
         resp = "HTTP/1.1 404 Not Found\r\n\r\n"
     conn.sendall(resp.encode())
-
-
     
 
 
