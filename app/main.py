@@ -3,7 +3,16 @@ import threading
 import os
 import sys
 
-def fileHandler(path):
+
+def fileHandlerPost(path , body):
+    directory = sys.argv[2]
+    [x,y,filename] = path.split('/')
+    with open(directory+filename , "w") as f:
+        f.write(body + f.name)
+    return "HTTP/1.1 201 Created\r\n\r\n"
+
+
+def fileHandlerGet(path):
     directory = sys.argv[2]
     [x,y,filename] = path.split('/')
     try:
@@ -44,7 +53,12 @@ def handleReq(conn , address):
         req = parseReq(data.decode('ascii'))
         path = req["req_line"]["path"]
         headers = req["headers"]
-        resp = getPaths(path , headers)
+        method = req["req_line"]["method"]
+        resp = ""
+        if method.startswith("GET"):
+            resp = getPaths(path , headers)
+        elif method.startswith("POST"):
+            resp = postPaths(path , req["body"])
         conn.sendall(resp.encode())
 
 def getPaths(path , headers):
@@ -52,7 +66,7 @@ def getPaths(path , headers):
     if path.startswith("/echo"):
         resp = echoHandler(path)
     elif path.startswith("/files"):
-        resp = fileHandler(path)
+        resp = fileHandlerGet(path)
     elif path.startswith("/user-agent"):
         resp = yagentHandler(headers)
     elif path == '/':
@@ -60,7 +74,12 @@ def getPaths(path , headers):
     else:
         resp = "HTTP/1.1 404 Not Found\r\n\r\n"
     return resp
-#def postPaths():
+def postPaths(path , body):
+    resp = ""
+    if path.startswith("/files"):
+        resp = fileHandlerPost(path , body)
+    return resp
+
 
 def main():
     # You can use print statements as follows for debugging, they'll be visible when running tests.
