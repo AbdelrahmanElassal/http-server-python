@@ -22,8 +22,11 @@ def main():
     data = conn.recv(1024)
     path = handleReq(data.decode('ascii'))
     resp = ""
-    if path == "/" :
+    if path.startswith("/") :
         resp ="HTTP/1.1 200 OK\r\n\r\n"
+    elif path.startswith("/echo"):
+        [f,r,data] = path.split('/')
+        resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + str(len(data)) + "\r\n\r\n" + data 
     else:
         resp = "HTTP/1.1 404 Not Found\r\n\r\n"
     conn.sendall(resp.encode())
