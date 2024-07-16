@@ -8,7 +8,7 @@ def fileHandlerPost(path , body):
     directory = sys.argv[2]
     [x,y,filename] = path.split('/')
     with open(directory+filename , "w") as f:
-        f.write(body + f.name)
+        f.write(body , f.name)
     return "HTTP/1.1 201 Created\r\n\r\n"
 
 
