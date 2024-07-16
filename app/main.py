@@ -5,7 +5,7 @@ import sys
 
 def fileHandler(path):
     directory = sys.argv[2]
-    [f,r,filename] = path.split('/')
+    [x,y,filename] = path.split('/')
     try:
         with open(directory+filename , r) as f:
             filecontent = f.read()
