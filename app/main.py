@@ -7,7 +7,7 @@ def fileHandler(path):
     directory = sys.argv[2]
     [x,y,filename] = path.split('/')
     try:
-        with open(directory+filename , r) as f:
+        with open(directory+filename , "r") as f:
             filecontent = f.read()
             return "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + str(len(filecontent)) + "\r\n\r\n" + filecontent
     except FileNotFoundError:
