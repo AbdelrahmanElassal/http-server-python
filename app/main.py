@@ -20,6 +20,8 @@ def fileHandlerGet(path):
             return "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + str(len(filecontent)) + "\r\n\r\n" + filecontent
     except FileNotFoundError:
         return "HTTP/1.1 404 Not Found\r\n\r\n"
+
+
 def echoHandler(path , headers):
     [f,r,bod] = path.split('/')
     allencoding = ""
@@ -30,8 +32,8 @@ def echoHandler(path , headers):
             break
     encodlist = allencoding.split(", ")
     if "gzip" in encodlist: 
-        gzip.compress(bod)
-        resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\nContent-Length: " + str(len(bod)) + "\r\n\r\n" + bod
+        bod2 = gzip.compress(bod.encode())
+        resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\nContent-Length: " + str(len(bod2)) + "\r\n\r\n" + bod2
     else:
         resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + str(len(bod)) + "\r\n\r\n" + bod
     return resp
@@ -84,6 +86,7 @@ def getPaths(path , headers):
     else:
         resp = "HTTP/1.1 404 Not Found\r\n\r\n"
     return resp
+
 def postPaths(path , body):
     resp = ""
     if path.startswith("/files"):
