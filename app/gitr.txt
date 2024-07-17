@@ -1,3 +1,0 @@
-git add .
-git commit -m "pass the 11st stage" # any msg
-git push origin master
