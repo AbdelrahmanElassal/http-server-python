@@ -33,7 +33,7 @@ def echoHandler(path , headers):
     encodlist = allencoding.split(", ")
     if "gzip" in encodlist: 
         compBod = gzip.compress(bod.encode('ascii'))
-        resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\nContent-Length: " + str(len(compBod)) + "\r\n\r\n" + compBod.decode('utf-8')
+        resp = b"HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\nContent-Length: " + str(len(compBod)).encode('ascii') + b"\r\n\r\n" + compBod
     else:
         resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + str(len(bod)) + "\r\n\r\n" + bod
     return resp
