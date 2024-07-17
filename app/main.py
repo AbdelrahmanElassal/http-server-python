@@ -22,13 +22,14 @@ def fileHandlerGet(path):
         return "HTTP/1.1 404 Not Found\r\n\r\n"
 def echoHandler(path , headers):
     [f,r,bod] = path.split('/')
-    accencoding = ""
+    allencoding = ""
     resp = ""
     for el in headers:
         if el.startswith("Accept-Encoding"):
-            accencoding = el.split(": ")[1]
+            allencoding = el.split(": ")[1]
             break
-    if accencoding == "gzip": 
+    encodlist = allencoding.split(", ")
+    if "gzip" in encodlist: 
         resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\nContent-Length: " + str(len(bod)) + "\r\n\r\n" + bod
     else:
         resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + str(len(bod)) + "\r\n\r\n" + bod
