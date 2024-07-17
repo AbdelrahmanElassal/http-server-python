@@ -71,7 +71,9 @@ def handleReq(conn , address):
             resp = getPaths(path , headers)
         elif method.startswith("POST"):
             resp = postPaths(path , req["body"])
-        conn.sendall(resp.encode())
+        if isinstance(resp, str):
+            resp = resp.encode()
+        conn.sendall(resp)
 
 def getPaths(path , headers):
     resp = ""
