@@ -1,6 +1,5 @@
 import socket
 import threading
-import os
 import sys
 
 
@@ -21,9 +20,18 @@ def fileHandlerGet(path):
             return "HTTP/1.1 200 OK\r\nContent-Type: application/octet-stream\r\nContent-Length: " + str(len(filecontent)) + "\r\n\r\n" + filecontent
     except FileNotFoundError:
         return "HTTP/1.1 404 Not Found\r\n\r\n"
-def echoHandler(path):
+def echoHandler(path , headers):
     [f,r,bod] = path.split('/')
-    resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + str(len(bod)) + "\r\n\r\n" + bod
+    accencoding = ""
+    resp = ""
+    for el in headers:
+        if el.startswith("Accept-Encoding"):
+            accencoding = el.split(": ")[1]
+            break
+    if accencoding == "gzip": 
+        resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Encoding: gzip\r\nContent-Length: " + str(len(bod)) + "\r\n\r\n" + bod
+    else:
+        resp = "HTTP/1.1 200 OK\r\nContent-Type: text/plain\r\nContent-Length: " + str(len(bod)) + "\r\n\r\n" + bod
     return resp
 
 def yagentHandler(headers):
@@ -64,7 +72,7 @@ def handleReq(conn , address):
 def getPaths(path , headers):
     resp = ""
     if path.startswith("/echo"):
-        resp = echoHandler(path)
+        resp = echoHandler(path , headers)
     elif path.startswith("/files"):
         resp = fileHandlerGet(path)
     elif path.startswith("/user-agent"):
